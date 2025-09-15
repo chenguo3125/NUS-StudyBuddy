@@ -327,7 +327,6 @@ function checkProfileCompleteness(userData: Partial<UserDoc>) {
 
 function createMatchProfileDisplay(userData: any, matchScore: number) {
   const name = userData.name || 'Anonymous'
-  const username = userData.handle ? `@${userData.handle}` : ''
   const gender = userData.gender || '—'
   const year = userData.yearOfStudy || '—'
   const major = userData.major || '—'
@@ -337,7 +336,7 @@ function createMatchProfileDisplay(userData: any, matchScore: number) {
   
   return `🎯 Study Buddy Match Found!
 
-👤 ${name} ${username}
+👤 ${name}
 📊 Match Score: ${matchScore.toFixed(2)}/10
 
 📋 Profile:
@@ -625,7 +624,6 @@ bot.action('quick_chats', async (ctx) => {
     const otherUserSnap = await usersCol.doc(otherUserId.toString()).get()
     const otherUserData = otherUserSnap.data()
     const otherUserName = otherUserData?.name || 'Anonymous'
-    const otherUserHandle = otherUserData?.handle ? `@${otherUserData.handle}` : ''
     
     const { messageCount, lastMessageFrom } = chatSession
     const isActiveConversation = lastMessageFrom !== ctx.from.id
@@ -633,7 +631,7 @@ bot.action('quick_chats', async (ctx) => {
     
     await ctx.reply(`💬 Active Chat Session
 
-👤 Chatting with: ${otherUserName} ${otherUserHandle}
+👤 Chatting with: ${otherUserName}
 📊 Messages sent: ${messageCount}
 🔄 Status: ${isActiveConversation ? 'Active' : 'Waiting for reply'}
 📝 Messages remaining: ${remaining}
@@ -809,14 +807,13 @@ bot.command('chats', async (ctx) => {
       const otherUserSnap = await usersCol.doc(String(otherUserId)).get()
       const otherUserData = otherUserSnap.data()
       const otherUserName = otherUserData?.name || 'Anonymous'
-      const otherUserHandle = otherUserData?.handle ? `@${otherUserData.handle}` : ''
       
       const isActiveConversation = lastMessageFrom !== ctx.from.id
       const remaining = isActiveConversation ? 'Unlimited' : `${2 - messageCount} left`
       
       await ctx.reply(`💬 Active Chat Session
 
-👤 Chatting with: ${otherUserName} ${otherUserHandle}
+👤 Chatting with: ${otherUserName}
 📊 Messages sent: ${messageCount}
 🔄 Status: ${isActiveConversation ? 'Active' : 'Waiting for reply'}
 📝 Messages remaining: ${remaining}

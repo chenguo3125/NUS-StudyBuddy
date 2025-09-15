@@ -16,5 +16,5 @@ services:
         sync: false
       - key: NODE_ENV
         value: production
-    healthCheckPath: /
+    healthCheckPath: /health
     autoDeploy: true
