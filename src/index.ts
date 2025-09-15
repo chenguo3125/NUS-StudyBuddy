@@ -381,13 +381,50 @@ bot.start(async (ctx) => {
     return
   }
 
-  await ctx.reply(
-    'Welcome to Study Buddy! What would you like to do?',
-    Markup.inlineKeyboard([
-      [Markup.button.callback('🔍 Find Study Buddy', 'quick_find'), Markup.button.callback('💬 My Chats', 'quick_chats')],
-      [Markup.button.callback('📝 Setup Profile', 'setup_profile'), Markup.button.callback('❓ Help', 'help')]
-    ])
-  )
+  // Check if user has a complete profile
+  const userSnap = await usersCol.doc(String(ctx.from.id)).get()
+  const userData = userSnap.data() as UserDoc
+  
+  if (userData) {
+    const completeness = checkProfileCompleteness(userData)
+    
+    if (completeness.isComplete) {
+      // Profile is complete, show main menu
+      await ctx.reply(
+        'Welcome back! Your profile is complete. What would you like to do?',
+        Markup.inlineKeyboard([
+          [Markup.button.callback('🔍 Find Study Buddy', 'quick_find'), Markup.button.callback('💬 My Chats', 'quick_chats')],
+          [Markup.button.callback('📝 Update Profile', 'setup_profile'), Markup.button.callback('❓ Help', 'help')]
+        ])
+      )
+    } else {
+      // Profile incomplete, show setup directly
+      await ctx.reply(
+        'Welcome to Study Buddy! Let\'s set up your profile to find study partners.\n\nComplete your profile to start finding study buddies!',
+        Markup.inlineKeyboard([
+          [Markup.button.callback('Gender', 'p_gender'), Markup.button.callback('Year', 'p_year')],
+          [Markup.button.callback('Major', 'p_major')],
+          [Markup.button.callback('Modules', 'p_modules')],
+          [Markup.button.callback('Mediums (online/IRL)', 'p_mediums')],
+          [Markup.button.callback('Description (optional)', 'p_desc')],
+          [Markup.button.callback('🔍 Find Study Buddy', 'quick_find')]
+        ])
+      )
+    }
+  } else {
+    // New user, show setup directly
+    await ctx.reply(
+      'Welcome to Study Buddy! Let\'s set up your profile to find study partners.\n\nComplete your profile to start finding study buddies!',
+      Markup.inlineKeyboard([
+        [Markup.button.callback('Gender', 'p_gender'), Markup.button.callback('Year', 'p_year')],
+        [Markup.button.callback('Major', 'p_major')],
+        [Markup.button.callback('Modules', 'p_modules')],
+        [Markup.button.callback('Mediums (online/IRL)', 'p_mediums')],
+        [Markup.button.callback('Description (optional)', 'p_desc')],
+        [Markup.button.callback('🔍 Find Study Buddy', 'quick_find')]
+      ])
+    )
+  }
 })
 
 bot.command('profile', async (ctx) => {
