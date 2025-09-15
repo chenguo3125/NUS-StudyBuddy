@@ -129,6 +129,9 @@ const INAPPROPRIATE_PATTERNS = [
   /spam|scam|fake|test|asdf|qwerty/i,
   /nude|sex|porn|xxx/i,
   /hate|kill|die|suicide/i,
+  /nig|nigga|nigger|niggers|black|white|asian|indian|chinese|japanese|korean|thai|vietnamese|malaysian|filipino|indonesian|philippine|malaysian|filipino|indonesian|philippine/i,
+  /alcohol|alcoholic|drunk|drunked|drunking|drunked/i,
+  /drug|drugs|weed|marijuana|cannabis|cocaine|meth|ecstasy|acid|lsd|shrooms|magic mushrooms|lsd|shrooms|magic mushrooms|lsd|shrooms|magic mushrooms/i,
   /睡|约|上床/i,
   /我操|操|吊|逼|屌|操你妈|操你爹|操你全家|操你大爷|操你奶奶|操你祖宗/i,
 ]
@@ -162,6 +165,10 @@ const HARASSMENT_PATTERNS = [
   /send me money|give me money|pay me|buy me/i,
   /do my homework|i want to|sleep with|help me cheat|copy your work/i,
   /skip class|skip school|play hooky/i,
+
+  /alcohol|alcoholic|drunk|drunked|drunking|drunked/i,
+  /drug|drugs|weed|marijuana|cannabis|cocaine|meth|ecstasy|acid|lsd|shrooms|magic mushrooms|lsd|shrooms|magic mushrooms|lsd|shrooms|magic mushrooms/i,
+  /nig|nigga|nigger|niggers|black|white|asian|indian|chinese|japanese|korean|thai|vietnamese|malaysian|filipino|indonesian|philippine|malaysian|filipino|indonesian|philippine/i,
 ]
 
 // Warning patterns (less severe but still inappropriate)
@@ -183,8 +190,12 @@ function validateMajor(major: string): { isValid: boolean; error?: string } {
     }
   }
   
-  // Check if it's a valid major
-  if (!VALID_MAJORS.has(cleanMajor)) {
+  // Check if it contains any valid major (partial matching)
+  const isValidMajor = Array.from(VALID_MAJORS).some(validMajor => 
+    cleanMajor.includes(validMajor.toLowerCase()) || validMajor.toLowerCase().includes(cleanMajor)
+  )
+  
+  if (!isValidMajor) {
     return { isValid: false, error: 'Please enter a real major name (e.g., Computer Science, Business, Engineering).' }
   }
   
@@ -928,12 +939,12 @@ bot.command('delete', async (ctx) => {
   bot.command('examples', async (ctx) => {
     await ctx.reply(`📚 Valid Examples
   
-  🎓 Majors:
-  • Computer Science, CS
-  • Business Administration, BA
-  • Mechanical Engineering, ME
-  • Mathematics, Math
-  • Psychology, Economics
+  🎓 Majors (partial matches accepted):
+  • Computer Science, CS, Computer Science Engineering
+  • Business Administration, BA, Business Analytics
+  • Mechanical Engineering, ME, Engineering
+  • Mathematics, Math, Applied Mathematics
+  • Psychology, Economics, Social Sciences
   
   📖 Modules:
   • CS2030S, ST2334, MA1101R
