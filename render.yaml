@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: study-buddy-bot
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: GOOGLE_APPLICATION_CREDENTIALS
+        value: ./service-account.json
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /
+    autoDeploy: true
