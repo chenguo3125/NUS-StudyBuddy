@@ -45,12 +45,24 @@ This bot is configured to deploy automatically on Render when you push to your r
    - Generate a service account key
    - Replace the content in `service-account.json`
 
+5. **Get Firebase Credentials for Production**
+   - Download your service account JSON file from Firebase Console
+   - Extract the following values:
+     - `private_key` → `FIREBASE_PRIVATE_KEY`
+     - `client_email` → `FIREBASE_CLIENT_EMAIL`
+     - `project_id` → `FIREBASE_PROJECT_ID`
+
 ### Environment Variables
 
 Set these in your Render dashboard:
 
+**Required:**
 - `BOT_TOKEN`: Your Telegram bot token
-- `GOOGLE_APPLICATION_CREDENTIALS`: Path to service account JSON (./service-account.json)
+- `FIREBASE_PRIVATE_KEY`: Your Firebase service account private key
+- `FIREBASE_CLIENT_EMAIL`: Your Firebase service account client email
+
+**Optional:**
+- `FIREBASE_PROJECT_ID`: Your Firebase project ID (defaults to 'nus-study-buddy')
 - `NODE_ENV`: production
 
 ### Deployment Steps

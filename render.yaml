@@ -8,8 +8,12 @@ services:
     envVars:
       - key: BOT_TOKEN
         sync: false
-      - key: GOOGLE_APPLICATION_CREDENTIALS
-        value: ./service-account.json
+      - key: FIREBASE_PROJECT_ID
+        value: nus-study-buddy
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
       - key: NODE_ENV
         value: production
     healthCheckPath: /
